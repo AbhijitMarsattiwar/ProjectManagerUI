@@ -1,0 +1,82 @@
+<div class="page-header">Add User</div>
+<form class="form-horizontal" [formGroup]="userForm" #formDir="ngForm" novalidate autocomplete="off">
+  <div class="row">
+    <div class="col-md-3">
+      <mat-form-field>
+        <input matInput placeholder="First Name" formControlName="firstName" required maxlength="100">
+        <mat-error *ngIf="firstName.hasError('required')">
+          First Name is required
+        </mat-error>
+        <mat-error *ngIf="firstName.hasError('minlength') && !firstName.hasError('required')">
+          First Name should be minimum 3 characters
+        </mat-error>
+      </mat-form-field>
+    </div>
+    <div class="col-md-3">
+      <mat-form-field>
+        <input matInput placeholder="Last Name" formControlName="lastName" required maxlength="100">
+        <mat-error *ngIf="lastName.hasError('required')">
+          Last Name is required
+        </mat-error>
+      </mat-form-field>
+    </div>
+    <div class="col-md-3">
+      <mat-form-field>
+        <input matInput placeholder="Employee ID" formControlName="employeeId" required maxlength="7">
+        <mat-error *ngIf="employeeId.hasError('required')">
+          Employee Id is required
+        </mat-error>
+        <mat-error *ngIf="employeeId.hasError('minlength') && !employeeId.hasError('required') && !employeeId.hasError('pattern')">
+          Employee Id must be 7 characters
+        </mat-error>
+        <mat-error *ngIf="employeeId.hasError('pattern') && !employeeId.hasError('required')">
+          Employee Id should be numeric
+        </mat-error>
+      </mat-form-field>
+    </div>
+    <div class="col-md-3">
+      <div class="button-row">
+        <button type="submit" *ngIf="!editMode" class="btn btn-primary margin-right-10" (click)="addUser(formDir)">Add User</button>
+        <button type="submit" *ngIf="editMode" class="btn btn-primary margin-right-10" (click)="updateUser(formDir)">Update User</button>
+        <input type="button" class="btn btn-primary" (click)="reset(formDir)" value="Reset" />
+      </div>
+    </div>
+  </div>
+</form>
+<br/>
+<div class="page-header">
+  View User
+</div>
+<div class="row">
+  <div class="col-md-4">
+    <input class="form-control" type="text" placeholder="Search..." [(ngModel)]="srchTerm" />
+  </div>
+  <div class="col-md-8">
+    <label>Sort By:</label>
+    <button class="margin-right-10 margin-left-10" mat-raised-button color="primary" (click)="sortRecords('FirstName')">First Name</button>
+    <button class="margin-right-10" mat-raised-button color="primary" (click)="sortRecords('LastName')">Last Name</button>
+    <button class="margin-right-10" mat-raised-button color="primary" (click)="sortRecords('EmployeeId')">Employee Id</button>
+  </div>
+</div>
+<br/>
+<div class="list-group" *ngFor="let user of users | filter : srchTerm | orderBy: path : order">
+    <!-- | paginate: { itemsPerPage: 5, currentPage: p }; -->
+  <div class="list-group-item">
+    {{user | json}}
+    <div class="row">
+      <div class="col-md-6">
+        <p class="list-group-item-text">
+          <label>First Name:</label> {{user.firstName}}</p>
+        <p class="list-group-item-text">
+          <label>Last Name:</label> {{user.lastName}}</p>
+        <p class="list-group-item-text">
+          <label>Employee Id:</label> {{user.empId}}</p>
+      </div>
+      <div class="col-md-6">
+        <button class="btn btn-primary margin-right-10" (click)="editUser(user)">Edit</button>
+        <button class="btn btn-primary" (click)="deleteUser(user.empId)">Delete</button>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- <pagination-controls (pageChange)="p = $event"></pagination-controls> -->

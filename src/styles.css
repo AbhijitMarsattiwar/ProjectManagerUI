@@ -1,0 +1,23 @@
+/* You can add global styles to this file, and also import other style files */
+@import '~@angular/material/prebuilt-themes/deeppurple-amber.css';
+
+
+.page-header { margin-top: 0; font-size: 16px; font-weight: bold; color: rgb(45, 115, 175); }
+.margin-right-10 { margin-right: 10px !important; }
+.margin-left-10 { margin-left: 10px !important; }
+.margin-right-neg-15 { margin-right: -15px; }
+.margin-bottom-0 { margin-bottom: 0; }
+.padding-top-10 { padding-top: 10px; }
+.width-100-percent { width: 100%; }
+.borderless td, .borderless th { border: 1 !important; }
+.horizontal-scroll { overflow: auto; }
+.light-blue { background-color: azure; }
+.mat-dialog-content { max-height: inherit !important; }
+.mat-raised-button.mat-primary {background-color:rgb(91,192,222)}
+
+mat-form-field { width: 100%; }
+mat-slider { width: 100%; margin-left: -8px; }
+pagination-controls { text-align: center}
+.navbar-default { background-color: lightskyblue}
+.mat-dialog-title {border-bottom: 2px solid lightgray}
+.center {text-align: center}

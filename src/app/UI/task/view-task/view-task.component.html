@@ -1,0 +1,56 @@
+<div class="page-header">View Tasks</div>
+<div class="row">
+  <div class="col-md-5">
+    <div class="row">
+      <div class="col-md-2 col-xs-2">
+        <label>Project<span style="color:red">*</span>:</label>
+      </div>
+      <div class="col-md-6 col-xs-6">
+        <input type="text" #projectInput class="form-control" [(ngModel)]="selectedProj" readonly>
+      </div>
+      <div class="col-md-4 col-xs-4">
+        <input type="button" class="btn btn-info width-100-percent" value="Search" (click)="openProjectDialog()" />
+      </div>
+    </div>
+  </div>
+  <div class="col-md-7">
+    <label>Sort By:&nbsp;&nbsp;</label>
+    <button class="margin-right-10" mat-raised-button color="primary" (click)="sortRecords('StartDate')">Start Date</button>
+    <button class="margin-right-10" mat-raised-button color="primary" (click)="sortRecords('EndDate')">End Date</button>
+    <button class="margin-right-10" mat-raised-button color="primary" (click)="sortRecords('Priority')">Priority</button>
+    <button class="margin-right-10" mat-raised-button color="primary" (click)="sortRecords('TaskStatus')">Completed</button>
+  </div>
+</div>
+<hr/>
+<div class="row" *ngIf="loading">
+  <div class="alert alert-danger">Processing please wait...</div>
+</div>
+<table class="table table-bordered table-responsive table-condensed">
+  <thead class="light-blue">
+    <tr>
+      <th>Task</th>
+      <th>Parent</th>
+      <th>Priority</th>
+      <th>Start</th>
+      <th>End</th>
+      <th>Action</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let task of tasks | orderBy: path : order">
+        <!-- | paginate: { itemsPerPage: 5, currentPage: p }; -->
+      <td>{{task.TaskName}}</td>
+      <td>{{task.ParentName}}</td>
+      <td>{{task.Priority}}</td>
+      <td>{{task.StartDate}}</td>
+      <td>{{task.EndDate}}</td>
+      <td>
+        <span *ngIf="task.TaskStatus === 'A'">
+          <button class="btn btn-primary margin-right-10" [routerLink]="['/editTask', task.TaskId]">Edit</button>
+          <button class="btn btn-primary" (click)="endTask(task.TaskId)">End Task</button>
+        </span>
+      </td>
+    </tr>
+  </tbody>
+</table>
+<!-- <pagination-controls *ngIf="projectInput.value" (pageChange)="p = $event"></pagination-controls> -->

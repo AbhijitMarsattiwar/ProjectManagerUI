@@ -1,0 +1,81 @@
+<div class="page-header">Add Task</div>
+<form [formGroup]="taskForm" #formDir="ngForm" novalidate autocomplete="off">
+  <div class="row">
+    <div class="col-md-6">
+      <div class="row">
+        <div class="col-xs-8">
+          <mat-form-field>
+            <input matInput placeholder="Project" formControlName="projectName" readonly>
+          </mat-form-field>
+        </div>
+        <div class="col-xs-4">
+          <input type="button" class="btn btn-info width-100-percent" value="Search" (click)="openProjectDialog()" [disabled]="parentTask" />
+        </div>
+      </div>
+      <mat-form-field>
+        <input matInput placeholder="Task Name" formControlName="taskName" required maxlength="100">
+        <mat-error *ngIf="taskName.hasError('required')">
+          Task name is required
+        </mat-error>
+        <mat-error *ngIf="taskName.hasError('minlength') && !taskName.hasError('required')">
+          Task name should be minimum 3 characters
+        </mat-error>
+      </mat-form-field>
+      <div class="row">
+        <div class="col-xs-12">
+          <mat-checkbox (click)="handleParentTask()" formControlName="isParentTask">Parent Task</mat-checkbox>
+        </div>
+      </div>
+      <div class="form-group margin-right-neg-15">
+        <label for="priority">Priority:</label>
+        <mat-slider min="0" max="30" step="1" id="priority" formControlName="priority" thumbLabel></mat-slider>
+        <mat-error *ngIf="priority.hasError('min') && formDir.submitted">
+          Priority is required
+        </mat-error>
+      </div>
+      <div class="row">
+        <div class="col-xs-6">
+          <mat-form-field>
+            <input matInput placeholder="Parent Task" formControlName="parentTaskName" readonly>
+          </mat-form-field>
+        </div>
+        <div class="col-xs-3">
+          <input type="button" class="btn btn-info width-100-percent" value="Search" (click)="openTaskDialog()" [disabled]="parentTask" />
+        </div>
+        <div class="col-xs-3">
+          <input type="button" class="btn btn-info width-100-percent" value="Clear" (click)="clearParentTask()" [disabled]="parentTask" />
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-xs-6">
+          <mat-form-field>
+            <input matInput [matDatepicker]="picker" placeholder="Start Date" formControlName="startDate" required>
+            <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+            <mat-datepicker #picker></mat-datepicker>
+          </mat-form-field>
+        </div>
+        <div class="col-xs-6">
+          <mat-form-field>
+            <input matInput [matDatepicker]="picker1" placeholder="End Date" formControlName="endDate" required>
+            <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
+            <mat-datepicker #picker1></mat-datepicker>
+          </mat-form-field>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-xs-8">
+          <mat-form-field>
+            <input matInput placeholder="User" formControlName="userName" readonly>
+          </mat-form-field>
+        </div>
+        <div class="col-xs-4">
+          <input type="button" class="btn btn-info width-100-percent" value="Search" (click)="openUserDialog()" [disabled]="parentTask"/>
+        </div>
+      </div>
+      <div class="button-row">
+        <button type="submit" class="btn btn-primary margin-right-10" (click)="addTask(formDir)">Add Task</button>
+        <input type="button" class="btn btn-primary" (click)="reset(formDir)" value="Reset" />
+      </div>
+    </div>
+  </div>
+</form>

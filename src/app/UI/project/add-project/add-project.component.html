@@ -1,0 +1,121 @@
+<div class="page-header">Add Project</div>
+<form [formGroup]="projectForm" #formDir="ngForm" novalidate autocomplete="off">
+  <div class="row">
+    <div class="col-md-6">
+      <mat-form-field>
+        <input matInput placeholder="Project" formControlName="projectName" required maxlength="100">
+        <mat-error *ngIf="projectName.hasError('required')">
+          Project name is required
+        </mat-error>
+        <mat-error *ngIf="projectName.hasError('minlength') && !projectName.hasError('required')">
+          Project name should be minimum 3 characters
+        </mat-error>
+      </mat-form-field>
+      <div class="row">
+        <div class="col-md-4 col-xs-12 padding-top-10">
+          <mat-checkbox (click)="toggleDate()" formControlName="dateRequired">Set Start & End Date</mat-checkbox>
+        </div>
+        <div class="clearfix visible-xs visible-sm"></div>
+        <div class="col-md-4 col-xs-6">
+          <mat-form-field>
+            <input matInput [matDatepicker]="picker" placeholder="Start Date" formControlName="startDate" required>
+            <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+            <mat-datepicker #picker></mat-datepicker>
+          </mat-form-field>
+        </div>
+        <div class="col-md-4 col-xs-6">
+          <mat-form-field>
+            <input matInput [matDatepicker]="picker1" placeholder="End Date" formControlName="endDate" required>
+            <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
+            <mat-datepicker #picker1></mat-datepicker>
+          </mat-form-field>
+        </div>
+      </div>
+      <div class="form-group margin-right-neg-15">
+        <label for="priority">Priority:</label>
+        <mat-slider min="0" max="30" step="1" id="priority" formControlName="priority" thumbLabel></mat-slider>
+        <mat-error *ngIf="priority.hasError('min') && formDir.submitted">
+          Priority is required
+        </mat-error>
+      </div>
+      <div class="row">
+        <div class="col-xs-8">
+          <mat-form-field>
+            <input matInput placeholder="Manager" formControlName="projectManager" readonly>
+          </mat-form-field>
+        </div>
+        <div class="col-xs-4">
+          <input type="button" class="btn btn-info width-100-percent" value="Search" (click)="openUserDialog()" />
+        </div>
+      </div>
+      <div class="button-row">
+        <button type="submit" *ngIf="!editMode" class="btn btn-primary margin-right-10" (click)="addProject(formDir)">Add Project</button>
+        <button type="submit" *ngIf="editMode" class="btn btn-primary margin-right-10" (click)="updateProject(formDir)">Update Project</button>
+        <input type="button" class="btn btn-primary" (click)="reset(formDir)" value="Reset" />
+      </div>
+    </div>
+  </div>
+</form>
+<br/>
+<div class="page-header">
+  View Projects
+</div>
+<div class="row">
+  <div class="col-md-4">
+    <input class="form-control" type="text" placeholder="Search..." [(ngModel)]="srchTerm" />
+  </div>
+  <div class="col-md-8">
+    <label>Sort By:</label>
+    <button class="margin-right-10 margin-left-10" mat-raised-button color="primary" (click)="sortRecords('StartDate')">Start Date</button>
+    <button class="margin-right-10" mat-raised-button color="primary" (click)="sortRecords('EndDate')">End Date</button>
+    <button class="margin-right-10" mat-raised-button color="primary" (click)="sortRecords('Priority')">Priority</button>
+    <button class="margin-right-10" mat-raised-button color="primary" (click)="sortRecords('Completed')">Completed</button>
+  </div>
+</div>
+<br/>
+<div class="list-group" *ngFor="let project of projects | filter : srchTerm : searchProps | orderBy: path : order">
+    <!-- | paginate: { itemsPerPage: 5, currentPage: p }; -->
+  <div class="list-group-item">
+    <div class="row">
+      <div class="col-md-8 horizontal-scroll">
+        <table class="table table-condensed borderless table-responsive margin-bottom-0">
+          <tr>
+            <td>
+              <label>Project:</label>
+            </td>
+            <td colspan="3">{{project.ProjectName}}</td>
+            <td>
+              <label>Priority</label>
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <label>No of Tasks:</label>
+            </td>
+            <td>{{project.TasksCount}}</td>
+            <td>
+              <label>Completed:</label>
+            </td>
+            <td>{{project.Completed}}</td>
+            <td rowspan="2" class="success">{{project.Priority}}</td>
+          </tr>
+          <tr>
+            <td>
+              <label>Start Date:</label>
+            </td>
+            <td>{{project.StartDate}}</td>
+            <td>
+              <label>End Date:</label>
+            </td>
+            <td>{{project.EndDate}}</td>
+          </tr>
+        </table>
+      </div>
+      <div class="col-md-4">
+        <button class="btn btn-primary margin-right-10" (click)="editProject(project)">Update</button>
+        <button class="btn btn-primary" (click)="suspendProject(project.ProjectId)">Suspend</button>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- <pagination-controls (pageChange)="p = $event"></pagination-controls> -->

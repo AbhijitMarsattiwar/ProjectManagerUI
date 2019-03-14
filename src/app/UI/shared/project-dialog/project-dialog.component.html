@@ -1,0 +1,35 @@
+<h1 mat-dialog-title>Select Project</h1>
+<mat-dialog-content>
+  <div class="row">
+    <div class="col-md-6">
+      <input class="form-control" type="text" placeholder="Search..." [(ngModel)]="srchTerm" />
+    </div>
+  </div>
+  <br/>
+  <table class="table table-bordered table-responsive table-condensed">
+    <thead class="light-blue">
+      <tr>
+        <th>Project</th>
+        <th>Start Date</th>
+        <th>End Date</th>
+        <th>Priority</th>
+        <th>Manager</th>
+        <th>Action</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let project of projects | filter : srchTerm : searchProps">
+          <!-- | paginate: {itemsPerPage: 5, currentPage: p} -->
+        <td>{{project.ProjectName}}</td>
+        <td>{{project.StartDate}}</td>
+        <td>{{project.EndDate}}</td>
+        <td>{{project.Priority}}</td>
+        <td>{{project.ProjectManagerFullName}}</td>
+        <td class="center">
+          <button class="btn btn-primary" (click)="close(project)">Select</button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <!-- <pagination-controls (pageChange)="p = $event"></pagination-controls> -->
+</mat-dialog-content>

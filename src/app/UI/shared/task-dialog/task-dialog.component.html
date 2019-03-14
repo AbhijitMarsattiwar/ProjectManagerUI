@@ -1,0 +1,27 @@
+<h1 mat-dialog-title>Select Parent Task</h1>
+<mat-dialog-content>
+  <div class="row">
+    <div class="col-xs-12">
+      <input class="form-control" type="text" placeholder="Search..." [(ngModel)]="srchTerm" />
+    </div>
+  </div>
+  <br/>
+  <table class="table table-bordered table-responsive table-condensed">
+    <thead class="light-blue">
+      <tr>
+        <th>Task Name</th>
+        <th>Action</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let task of tasks | filter : srchTerm">
+          <!-- | paginate: {itemsPerPage: 5, currentPage: p} -->
+        <td>{{task.TaskName}}</td>
+        <td class="center">
+          <button class="btn btn-primary" (click)="close(task)">Select</button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <!-- <pagination-controls (pageChange)="p = $event"></pagination-controls> -->
+</mat-dialog-content>
