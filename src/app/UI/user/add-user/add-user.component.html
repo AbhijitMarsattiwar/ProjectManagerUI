@@ -22,14 +22,14 @@
     </div>
     <div class="col-md-3">
       <mat-form-field>
-        <input matInput placeholder="Employee ID" formControlName="employeeId" required maxlength="7">
-        <mat-error *ngIf="employeeId.hasError('required')">
+        <input matInput placeholder="Employee ID" formControlName="empId" required maxlength="7">
+        <mat-error *ngIf="empId.hasError('required')">
           Employee Id is required
         </mat-error>
-        <mat-error *ngIf="employeeId.hasError('minlength') && !employeeId.hasError('required') && !employeeId.hasError('pattern')">
+        <mat-error *ngIf="empId.hasError('minlength') && !empId.hasError('required') && !empId.hasError('pattern')">
           Employee Id must be 7 characters
         </mat-error>
-        <mat-error *ngIf="employeeId.hasError('pattern') && !employeeId.hasError('required')">
+        <mat-error *ngIf="empId.hasError('pattern') && !empId.hasError('required')">
           Employee Id should be numeric
         </mat-error>
       </mat-form-field>
@@ -53,16 +53,15 @@
   </div>
   <div class="col-md-8">
     <label>Sort By:</label>
-    <button class="margin-right-10 margin-left-10" mat-raised-button color="primary" (click)="sortRecords('FirstName')">First Name</button>
-    <button class="margin-right-10" mat-raised-button color="primary" (click)="sortRecords('LastName')">Last Name</button>
-    <button class="margin-right-10" mat-raised-button color="primary" (click)="sortRecords('EmployeeId')">Employee Id</button>
+    <button class="margin-right-10 margin-left-10" mat-raised-button color="primary" (click)="sortRecords('firstName')">First Name</button>
+    <button class="margin-right-10" mat-raised-button color="primary" (click)="sortRecords('lastName')">Last Name</button>
+    <button class="margin-right-10" mat-raised-button color="primary" (click)="sortRecords('empId')">Employee Id</button>
   </div>
 </div>
 <br/>
 <div class="list-group" *ngFor="let user of users | filter : srchTerm | orderBy: path : order">
     <!-- | paginate: { itemsPerPage: 5, currentPage: p }; -->
-  <div class="list-group-item">
-    {{user | json}}
+  <div class="list-group-item">    
     <div class="row">
       <div class="col-md-6">
         <p class="list-group-item-text">
@@ -71,10 +70,12 @@
           <label>Last Name:</label> {{user.lastName}}</p>
         <p class="list-group-item-text">
           <label>Employee Id:</label> {{user.empId}}</p>
+        <p class="list-group-item-text">
+            <label>User Id:</label> {{user.userId}}</p>
       </div>
       <div class="col-md-6">
         <button class="btn btn-primary margin-right-10" (click)="editUser(user)">Edit</button>
-        <button class="btn btn-primary" (click)="deleteUser(user.empId)">Delete</button>
+        <button class="btn btn-primary" (click)="deleteUser(user.userId)">Delete</button>
       </div>
     </div>
   </div>

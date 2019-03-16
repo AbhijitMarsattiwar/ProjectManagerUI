@@ -15,10 +15,10 @@
   </div>
   <div class="col-md-7">
     <label>Sort By:&nbsp;&nbsp;</label>
-    <button class="margin-right-10" mat-raised-button color="primary" (click)="sortRecords('StartDate')">Start Date</button>
-    <button class="margin-right-10" mat-raised-button color="primary" (click)="sortRecords('EndDate')">End Date</button>
-    <button class="margin-right-10" mat-raised-button color="primary" (click)="sortRecords('Priority')">Priority</button>
-    <button class="margin-right-10" mat-raised-button color="primary" (click)="sortRecords('TaskStatus')">Completed</button>
+    <button class="margin-right-10" mat-raised-button color="primary" (click)="sortRecords('startDate')">Start Date</button>
+    <button class="margin-right-10" mat-raised-button color="primary" (click)="sortRecords('endDate')">End Date</button>
+    <button class="margin-right-10" mat-raised-button color="primary" (click)="sortRecords('priority')">Priority</button>
+    <button class="margin-right-10" mat-raised-button color="primary" (click)="sortRecords('isEnded')">Completed</button>
   </div>
 </div>
 <hr/>
@@ -38,16 +38,16 @@
   </thead>
   <tbody>
     <tr *ngFor="let task of tasks | orderBy: path : order">
-        <!-- | paginate: { itemsPerPage: 5, currentPage: p }; -->
-      <td>{{task.TaskName}}</td>
-      <td>{{task.ParentName}}</td>
-      <td>{{task.Priority}}</td>
-      <td>{{task.StartDate}}</td>
-      <td>{{task.EndDate}}</td>
+        <!-- | paginate: { itemsPerPage: 5, currentPage: p }; -->      
+      <td>{{task.taskName}}</td>
+      <td>{{task.parentTask ? task.parentTask['parentTask'] : ''}}</td>
+      <td>{{task.priority}}</td>
+      <td>{{task.startDate | date:"MM/dd/yyyy"}} </td>
+      <td>{{task.endDate | date:"MM/dd/yyyy"}}</td>
       <td>
-        <span *ngIf="task.TaskStatus === 'A'">
-          <button class="btn btn-primary margin-right-10" [routerLink]="['/editTask', task.TaskId]">Edit</button>
-          <button class="btn btn-primary" (click)="endTask(task.TaskId)">End Task</button>
+        <span *ngIf="!task.isEnded">
+          <button class="btn btn-primary margin-right-10" [routerLink]="['/editTask', task.taskId]">Edit</button>
+          <button class="btn btn-primary" (click)="endTask(task)">End Task</button>
         </span>
       </td>
     </tr>

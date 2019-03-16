@@ -18,9 +18,9 @@
     <tbody>
       <tr *ngFor="let user of users | filter : srchTerm">
           <!-- | paginate: {itemsPerPage: 5, currentPage: p} -->
-        <td>{{user.FirstName}}</td>
-        <td>{{user.LastName}}</td>
-        <td>{{user.EmployeeId}}</td>
+        <td>{{user.firstName}}</td>
+        <td>{{user.lastName}}</td>
+        <td>{{user.empId}}</td>
         <td class="center">
           <button class="btn btn-primary" (click)="close(user)">Select</button>
         </td>

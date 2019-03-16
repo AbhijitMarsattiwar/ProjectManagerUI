@@ -11,14 +11,15 @@ import { ParentTask } from 'src/app/Models/parent-task';
 })
 export class TaskService {
 
-  getParentTasksUrl: string = `${environment.apiBaseUrl}/task/getparenttasks`;
-  createParentTaskUrl: string = `${environment.apiBaseUrl}/task/createparenttask`;
+  getParentTasksUrl: string = `${environment.apiBaseUrl}/parentTasks`;
+  createParentTaskUrl: string = `${environment.apiBaseUrl}/addParentTask`;
+  getAllTasksUrl: string = `${environment.apiBaseUrl}/tasks`;
+  getAllTasksForProjectUrl: string = `${environment.apiBaseUrl}/tasks/projects/`;
+  endTaskUrl: string = `${environment.apiBaseUrl}/tasks/`;
+  addTaskUrl: string = `${environment.apiBaseUrl}/addTask`;
 
-  getAllTasksUrl: string = `${environment.apiBaseUrl}/task/getalltasks`;
-  getTaskByIdUrl: string = `${environment.apiBaseUrl}/task/gettaskbyid`;
-  addTaskUrl: string = `${environment.apiBaseUrl}/task/create`;
-  updateTaskUrl: string = `${environment.apiBaseUrl}/task/update`;
-  endTaskUrl: string = `${environment.apiBaseUrl}/task/endtask`;
+  getTaskByIdUrl: string = `${environment.apiBaseUrl}/tasks/`;
+  updateTaskUrl: string = `${environment.apiBaseUrl}/tasks/`;
 
   constructor(private http: HttpClient) { }
 
@@ -42,8 +43,8 @@ export class TaskService {
       );
   }
 
-  getAllTasks(id: number):  Observable<Task[]> {
-    return this.http.get<Task[]>(`${this.getAllTasksUrl}/?projectId=${id}`)
+  getAllTasksByProject(id: number):  Observable<Task[]> {
+    return this.http.get<Task[]>(this.getAllTasksForProjectUrl + id)
       .pipe(
         catchError(error => {
           console.log(error);
@@ -52,8 +53,8 @@ export class TaskService {
       );
   }
 
-  getTaskById(id: number): Observable<Task> {
-    return this.http.get<Task>(`${this.getTaskByIdUrl}/?taskId=${id}`)
+  getAllTasks():Observable<any>{    
+    return this.http.get<Task[]>(this.getAllTasksUrl)
       .pipe(
         catchError(error => {
           console.log(error);
@@ -62,8 +63,18 @@ export class TaskService {
       );
   }
 
-  addTask(task: Task): Observable<ParentTask> {
-    return this.http.post<ParentTask>(this.addTaskUrl, task)
+  getTaskById(taskId: number): Observable<Task> {
+    return this.http.get<Task>(this.getTaskByIdUrl+taskId)
+      .pipe(
+        catchError(error => {
+          console.log(error);
+          throw('Server error occurred. Please try again later.');
+        })
+      );
+  }
+
+  addTask(task: Task): Observable<Task> {
+    return this.http.post<Task>(this.addTaskUrl, task)
       .pipe(
         catchError(error => {
           console.log(error);
@@ -73,7 +84,7 @@ export class TaskService {
   }
 
   updateTask(task: Task): Observable<Task> {
-    return this.http.put<Task>(this.updateTaskUrl, task)
+    return this.http.put<Task>(this.updateTaskUrl+task.taskId, task)
       .pipe(
         catchError(error => {
           console.log(error);
@@ -82,8 +93,8 @@ export class TaskService {
       );
   }
 
-  endTask(id: number): Observable<Task> {
-    return this.http.put<Task>(`${this.endTaskUrl}/?taskId=${id}`, null)
+  endTask(task: Task): Observable<Task> {
+    return this.http.put<Task>(this.endTaskUrl+'/'+task.taskId,task)
       .pipe(
         catchError(error => {
           console.log(error);

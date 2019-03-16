@@ -9,6 +9,8 @@ import { UtilityService } from 'src/app/Services/utility.service';
 import { TaskService } from 'src/app/Services/task.service';
 import { Task } from 'src/app/Models/task';
 import { ParentTask } from 'src/app/Models/parent-task';
+import { Project } from 'src/app/Models/project';
+import { User } from 'src/app/Models/user';
 
 @Component({
   selector: 'app-add-task',
@@ -22,8 +24,11 @@ export class AddTaskComponent implements OnInit {
   userDialogRef: MatDialogRef<UserDialogComponent>;
   msgDialogRef: MatDialogRef<MessageDialogComponent>;
   selectedProjId: number;
+  selectedProj: Project;
   selectedTaskId: number;
+  selectedTask: ParentTask;
   selectedUserId: number;
+  selectedUser: User;
   parentTask: boolean;
   prntTask: ParentTask;
   task: Task;
@@ -65,12 +70,13 @@ export class AddTaskComponent implements OnInit {
   openProjectDialog() {
     this.projectDialogRef = this.dialog.open(ProjectDialogComponent, { height: '500px', width: '700px' });
 
-    this.projectDialogRef.afterClosed().subscribe((selectedProj: any) => {
+    this.projectDialogRef.afterClosed().subscribe((selectedProj: Project) => {
       if (selectedProj) {
         this.taskForm.patchValue({
-          projectName: selectedProj.ProjectName
+          projectName: selectedProj.projectName
         });
-        this.selectedProjId = selectedProj.ProjectId;
+        this.selectedProjId = selectedProj.projectId;
+        this.selectedProj = selectedProj
       }
     });
   }
@@ -78,12 +84,13 @@ export class AddTaskComponent implements OnInit {
   openTaskDialog() {
     this.taskDialogRef = this.dialog.open(TaskDialogComponent, { height: '500px', width: '650px' });
 
-    this.taskDialogRef.afterClosed().subscribe((selectedTask: any) => {
+    this.taskDialogRef.afterClosed().subscribe((selectedTask: ParentTask) => {
       if (selectedTask) {
         this.taskForm.patchValue({
-          parentTaskName: selectedTask.TaskName
+          parentTaskName: selectedTask.parentTask
         });
-        this.selectedTaskId = selectedTask.TaskId;
+        this.selectedTaskId = selectedTask.parentId;
+        this.selectedTask = selectedTask;
       }
     });
   }
@@ -91,12 +98,13 @@ export class AddTaskComponent implements OnInit {
   openUserDialog() {
     this.userDialogRef = this.dialog.open(UserDialogComponent, { height: '500px', width: '650px' });
 
-    this.userDialogRef.afterClosed().subscribe((selectedUser: any) => {
+    this.userDialogRef.afterClosed().subscribe((selectedUser: User) => {
       if (selectedUser) {
         this.taskForm.patchValue({
-          userName: selectedUser.FirstName + ' ' + selectedUser.LastName
+          userName: selectedUser.firstName + ' ' + selectedUser.lastName
         });
-        this.selectedUserId = selectedUser.EmployeeId;
+        this.selectedUserId = selectedUser.empId;
+        this.selectedUser = selectedUser;
       }
     });
   }
@@ -144,8 +152,8 @@ export class AddTaskComponent implements OnInit {
 
     if (this.parentTask) {
       this.prntTask = {
-        TaskName: taskInput.taskName,
-        TaskId: 0
+        parentTask: taskInput.taskName,
+        parentId: null
       }
 
       this.taskService.addParentTask(this.prntTask)
@@ -160,18 +168,21 @@ export class AddTaskComponent implements OnInit {
     }
     else {
       this.task = {
-        ProjectId: this.selectedProjId,
-        TaskName: taskInput.taskName,
-        StartDate: this.utility.getStringifiedDate(taskInput.startDate),
-        EndDate: this.utility.getStringifiedDate(taskInput.endDate),
-        Priority: taskInput.priority,
-        ParentId: this.selectedTaskId,
-        UserId: this.selectedUserId,
-        ParentName: '',
-        ProjectName: '',
-        TaskId: 0,
-        TaskStatus: '',
-        UserName: ''
+        //ProjectId: this.selectedProjId,
+        project: this.selectedProj,
+        taskName: taskInput.taskName,
+        startDate: this.utility.getStringifiedDate(taskInput.startDate),
+        endDate: this.utility.getStringifiedDate(taskInput.endDate),
+        priority: taskInput.priority,
+        //parentId: this.selectedTaskId,
+        parentTask: this.selectedTask,
+        //UserId: this.selectedUserId,
+        user: this.selectedUser,
+        //ParentName: '',
+        //ProjectName: '',
+        taskId: null,
+        isEnded: 0,
+        //UserName: ''
       }
 
       if (!this.utility.validate(taskInput.startDate, taskInput.endDate)) {
@@ -198,6 +209,7 @@ export class AddTaskComponent implements OnInit {
       parentTaskName: ''
     });
     this.selectedTaskId = null;
+    this.selectedTask = null;
   }
 
   reset(form: NgForm): void {

@@ -17,7 +17,8 @@ export class AddProjectComponent implements OnInit {
   projectForm: FormGroup;
   editMode: Boolean;
   selectedProjId: number;
-  selectedMgrId: number;
+  //selectedMgrId: number;
+  selectedManager : User;
   srchTerm: string = undefined;
   project: Project;
   searchProps: string[] = ['ProjectName', 'TasksCount', 'StartDate', 'Completed', 'EndDate', 'Priority'];
@@ -41,7 +42,7 @@ export class AddProjectComponent implements OnInit {
 
   initialize() {
     this.editMode = false;
-    this.selectedMgrId = null;
+    this.selectedManager = null;
     this.projectForm = this.formBuilder.group({
       projectName: new FormControl('', {
         validators: [Validators.required, Validators.minLength(3)]
@@ -69,9 +70,9 @@ export class AddProjectComponent implements OnInit {
     this.userDialogRef.afterClosed().subscribe((selectedUser: User) => {
       if (selectedUser) {
         this.projectForm.patchValue({
-          projectManager: selectedUser.FirstName + ' ' + selectedUser.LastName
+          projectManager: selectedUser.firstName + ' ' + selectedUser.lastName
         });
-        this.selectedMgrId = selectedUser.EmployeeId;
+        this.selectedManager = selectedUser;
       }
     });
   }
@@ -118,7 +119,7 @@ export class AddProjectComponent implements OnInit {
   updateProject(form: NgForm) {
     if (!this.projectForm.valid) { return; }
     if (!this.getFormValuesAndValidate()) { return; }
-    this.project.ProjectId = this.selectedProjId;
+    this.project.projectId = this.selectedProjId;
 
     this.projectService.updateProject(this.project)
       .subscribe(
@@ -148,15 +149,16 @@ export class AddProjectComponent implements OnInit {
     let projectInput = this.projectForm.value;
 
     this.project = {
-      ProjectName: projectInput.projectName,
-      StartDate: this.utility.getStringifiedDate(projectInput.startDate),
-      EndDate: this.utility.getStringifiedDate(projectInput.endDate),
-      Priority: projectInput.priority,
-      ProjectManagerId: this.selectedMgrId,
-      ProjectManagerFullName: '',
-      Completed: 0,
-      ProjectId: 0,
-      TasksCount: 0
+      projectName: projectInput.projectName,
+      startDate: this.utility.getStringifiedDate(projectInput.startDate),
+      endDate: this.utility.getStringifiedDate(projectInput.endDate),
+      priority: projectInput.priority,
+      //projectManagerId: this.selectedMgrId,
+      //projectManagerFullName: '',
+      //completed: 'N0',
+      projectId: 0,
+      //tasksCount: 0,
+      user: this.selectedManager
     }
 
     if (!this.utility.validate(projectInput.startDate, projectInput.endDate)) {
@@ -168,24 +170,24 @@ export class AddProjectComponent implements OnInit {
     return true;
   }
 
-  editProject(project: any) {
-    this.selectedProjId = project.ProjectId;
+  editProject(project: Project) {
+    this.selectedProjId = project.projectId;
     this.projectForm.patchValue({
-      projectName: project.ProjectName,
-      projectManager: project.ProjectManagerFullName,
-      priority: project.Priority,
+      projectName: project.projectName,
+      projectManager: project.user.firstName + ' ' +project.user.lastName ,
+      priority: project.priority,
     });
     // Enable the date fields if date values are present
-    if (project.StartDate) {
+    if (project.startDate) {
       this.projectForm.patchValue({
         dateRequired: true,
-        startDate: new Date(project.StartDate),
-        endDate: new Date(project.EndDate)
+        startDate: new Date(project.startDate),
+        endDate: new Date(project.endDate)
       });
       this.projectForm.controls['startDate'].enable();
       this.projectForm.controls['endDate'].enable();
     }
-    this.selectedMgrId = project.ProjectManagerId;
+    this.selectedManager = project.user;
     this.editMode = true;
   }
 

@@ -8,6 +8,9 @@ import { ActivatedRoute } from '@angular/router';
 import { Router } from '@angular/router';
 import { Task } from 'src/app/Models/task';
 import { TaskService } from 'src/app/Services/task.service';
+import { ParentTask } from 'src/app/Models/parent-task';
+import { Project } from 'src/app/Models/project';
+import { User } from 'src/app/Models/user';
 
 @Component({
   selector: 'app-edit-task',
@@ -21,12 +24,14 @@ export class EditTaskComponent implements OnInit {
   taskForm: FormGroup;
   taskDialogRef: MatDialogRef<TaskDialogComponent>;
   msgDialogRef: MatDialogRef<MessageDialogComponent>;
-  selectedTaskId: number;
+  selectedTaskParent: ParentTask;
   parentTask: boolean;
   private sub: any;
   id: number;
   oldTask: Task;
   newTask: Task;
+  project: Project;
+  user: User;
 
   constructor(private formBuilder: FormBuilder
     , private dialog: MatDialog
@@ -69,15 +74,23 @@ export class EditTaskComponent implements OnInit {
 
   initializeForm() {
     this.taskForm.patchValue({
-      projectName: this.oldTask.ProjectName,
-      taskName: this.oldTask.TaskName,
-      parentTaskName: this.oldTask.ParentName,
-      priority: this.oldTask.Priority,
-      startDate: new Date(this.oldTask.StartDate),
-      endDate: new Date(this.oldTask.EndDate),
-      userName: this.oldTask.UserName
+      projectName: this.oldTask.project.projectName,
+      taskName: this.oldTask.taskName,
+      //parentTaskName: this.oldTask.parentTask.parentTask,
+      priority: this.oldTask.priority,
+      startDate: new Date(this.oldTask.startDate),
+      endDate: new Date(this.oldTask.endDate),
+      userName: this.oldTask.user.firstName
     });
-    this.selectedTaskId = this.oldTask.ParentId;
+
+    if(this.oldTask.parentTask){
+      this.taskForm.patchValue({        
+        parentTaskName: this.oldTask.parentTask.parentTask
+      });
+    }
+    this.selectedTaskParent = this.oldTask.parentTask;
+    this.project = this.oldTask.project;
+    this.user = this.oldTask.user;
   }
 
   get projectName() { return this.taskForm.get('projectName'); }
@@ -89,14 +102,13 @@ export class EditTaskComponent implements OnInit {
   get userName() { return this.taskForm.get('userName'); }
 
   openTaskDialog() {
-    this.taskDialogRef = this.dialog.open(TaskDialogComponent, { height: '500px' });
-
-    this.taskDialogRef.afterClosed().subscribe((selectedTask: any) => {
+    this.taskDialogRef = this.dialog.open(TaskDialogComponent, { height: '500px', width: '650px' });
+    this.taskDialogRef.afterClosed().subscribe((selectedTask: ParentTask) => {
       if (selectedTask) {
         this.taskForm.patchValue({
-          parentTaskName: selectedTask.TaskName
+          parentTaskName: selectedTask.parentTask
         });
-        this.selectedTaskId = selectedTask.TaskId;
+        this.selectedTaskParent = selectedTask;
       }
     });
   }
@@ -106,18 +118,22 @@ export class EditTaskComponent implements OnInit {
     let taskInput = this.taskForm.value;
 
     this.newTask = {
-      TaskName: taskInput.taskName,
-      StartDate: this.utility.getStringifiedDate(taskInput.startDate),
-      EndDate: this.utility.getStringifiedDate(taskInput.endDate),
-      Priority: taskInput.priority,
-      ParentId: this.selectedTaskId,
-      ParentName: '',
-      UserId: this.oldTask.UserId,
-      UserName: '',
-      TaskId: this.id,
-      ProjectId: this.oldTask.ProjectId,
-      ProjectName: '',
-      TaskStatus: ''
+      taskName: taskInput.taskName,
+      startDate: this.utility.getStringifiedDate(taskInput.startDate),
+      endDate: this.utility.getStringifiedDate(taskInput.endDate),
+      priority: taskInput.priority,
+      //ParentId: this.selectedTaskId,
+      //ParentName: '',
+      //UserId: this.oldTask.UserId,
+      //UserName: '',
+      taskId: this.id,
+      //ProjectId: this.oldTask.ProjectId,
+      //ProjectName: '',
+      //TaskStatus: ''
+      isEnded: 0,
+      parentTask:this.selectedTaskParent,
+      project: this.project,
+      user: this.user
     }
 
     if (!this.utility.validate(taskInput.startDate, taskInput.endDate)) {
@@ -143,7 +159,7 @@ export class EditTaskComponent implements OnInit {
     this.taskForm.patchValue({
       parentTaskName: ''
     });
-    this.selectedTaskId = null;
+    this.selectedTaskParent = null;
   }
 
   reset(): void {

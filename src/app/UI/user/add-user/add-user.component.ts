@@ -17,7 +17,7 @@ export class AddUserComponent implements OnInit {
  //initializing p to one
  p: number = 1;
   // For sorting
-  path: string[] = ['EmployeeId'];
+  path: string[] = ['empId'];
   order: number = 1; // 1 asc, -1 desc;
 
   constructor(private formBuilder: FormBuilder
@@ -32,16 +32,17 @@ export class AddUserComponent implements OnInit {
         validators: [Validators.required, Validators.minLength(3)]
       }),
       lastName: new FormControl('', Validators.required),
-      employeeId: new FormControl('', {
-        validators: [Validators.required, Validators.pattern("^[0-9]*$"), Validators.minLength(7), Validators.maxLength(7)]
-      })
+      empId: new FormControl('', {
+        validators: [Validators.required, Validators.minLength(7), Validators.maxLength(7)]
+      }),
+      userId : new FormControl('')
     });
   }
 
   // Form properties
   get firstName() { return this.userForm.get('firstName'); }
   get lastName() { return this.userForm.get('lastName'); }
-  get employeeId() { return this.userForm.get('employeeId'); }
+  get empId() { return this.userForm.get('empId'); }
 
   sortRecords(prop: string) {
     this.path = prop.split('.')
@@ -53,7 +54,7 @@ export class AddUserComponent implements OnInit {
     if (!this.userForm.valid) { return; }
     this.getFormValues();
 
-    if (!this.validate(this.user.EmployeeId)) {
+    if (!this.validate(this.user.empId)) {
       alert('The Employee id already exists.');
       return;
     }
@@ -99,10 +100,12 @@ export class AddUserComponent implements OnInit {
 
   getFormValues() {
     var userDetail = this.userForm.getRawValue();
+    console.log('userDetail='+userDetail.userId);
     this.user = {
-      EmployeeId: userDetail.employeeId,
-      FirstName: userDetail.firstName,
-      LastName: userDetail.lastName
+      empId: userDetail.empId,
+      firstName: userDetail.firstName,
+      lastName: userDetail.lastName,
+      userId: userDetail.userId
     }
   }
 
@@ -118,23 +121,24 @@ export class AddUserComponent implements OnInit {
   }
 
   validate(employeeId: number) {
-    var isIdTaken = this.users.some(function(el){ return el.EmployeeId == employeeId});
+    var isIdTaken = this.users.some(function(el){ return el.empId == employeeId});
     return !isIdTaken;
   }
   
   reset(form: NgForm): void {
     form.resetForm();
-    this.userForm.controls['employeeId'].enable();
+    this.userForm.controls['empId'].enable();
     this.editMode = false;
   }
 
   editUser(user: User) {
     this.userForm.patchValue({
-      firstName: user.FirstName,
-      lastName: user.LastName,
-      employeeId: user.EmployeeId
+      firstName: user.firstName,
+      lastName: user.lastName,
+      empId: user.empId,
+      userId: user.userId
     });
-    this.userForm.controls['employeeId'].disable();
+    //this.userForm.controls['empId'].disable();
     this.editMode = true;
   }
 }

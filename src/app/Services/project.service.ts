@@ -10,9 +10,9 @@ import { catchError } from 'rxjs/operators';
 })
 export class ProjectService {
 
-  getAllProjectsUrl: string = `${environment.apiBaseUrl}/project/getallprojects`;
-  addProjectUrl: string = `${environment.apiBaseUrl}/project/create`;
-  updateProjectUrl: string = `${environment.apiBaseUrl}/project/update`;
+  getAllProjectsUrl: string = `${environment.apiBaseUrl}/projects`;
+  addProjectUrl: string = `${environment.apiBaseUrl}/addProject`;
+  updateProjectUrl: string = `${environment.apiBaseUrl}/projects/`;
   deleteProjectUrl: string = `${environment.apiBaseUrl}/project/suspend`;
 
   constructor(private http: HttpClient) { }
@@ -28,6 +28,7 @@ export class ProjectService {
   }
 
   addProject(project: Project): Observable<Project> {
+    console.log(JSON.stringify(project));
     return this.http.post<Project>(this.addProjectUrl, project)
       .pipe(
         catchError(error => {
@@ -38,7 +39,8 @@ export class ProjectService {
   }
 
   updateProject(project: Project): Observable<Project> {
-    return this.http.put<Project>(this.updateProjectUrl, project)
+    console.log(JSON.stringify(project));
+    return this.http.put<Project>(this.updateProjectUrl+project.projectId, project)
       .pipe(
         catchError(error => {
           console.log(error);

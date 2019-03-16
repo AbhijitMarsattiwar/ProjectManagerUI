@@ -83,7 +83,7 @@
             <td>
               <label>Project:</label>
             </td>
-            <td colspan="3">{{project.ProjectName}}</td>
+            <td colspan="3">{{project.projectName}}</td>
             <td>
               <label>Priority</label>
             </td>
@@ -92,28 +92,27 @@
             <td>
               <label>No of Tasks:</label>
             </td>
-            <td>{{project.TasksCount}}</td>
+            <td>{{project.priority}}</td>
             <td>
               <label>Completed:</label>
             </td>
-            <td>{{project.Completed}}</td>
-            <td rowspan="2" class="success">{{project.Priority}}</td>
+            <td>No</td>
+            <td rowspan="2" class="success">{{project.priority}}</td>
           </tr>
           <tr>
             <td>
               <label>Start Date:</label>
             </td>
-            <td>{{project.StartDate}}</td>
+            <td>{{project.startDate | date:"MM/dd/yyyy"}}</td>
             <td>
               <label>End Date:</label>
             </td>
-            <td>{{project.EndDate}}</td>
+            <td>{{project.endDate | date:"MM/dd/yyyy"}}</td>
           </tr>
         </table>
       </div>
       <div class="col-md-4">
-        <button class="btn btn-primary margin-right-10" (click)="editProject(project)">Update</button>
-        <button class="btn btn-primary" (click)="suspendProject(project.ProjectId)">Suspend</button>
+        <button class="btn btn-primary margin-right-10" (click)="editProject(project)">Edit</button>
       </div>
     </div>
   </div>

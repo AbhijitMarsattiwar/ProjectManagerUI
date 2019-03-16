@@ -5,6 +5,6 @@ export class User {
 
     firstName : string;
     lastName : string;
-    empId : string;
+    empId : number;
     userId: number;
 }

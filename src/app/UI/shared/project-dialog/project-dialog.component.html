@@ -20,11 +20,11 @@
     <tbody>
       <tr *ngFor="let project of projects | filter : srchTerm : searchProps">
           <!-- | paginate: {itemsPerPage: 5, currentPage: p} -->
-        <td>{{project.ProjectName}}</td>
-        <td>{{project.StartDate}}</td>
-        <td>{{project.EndDate}}</td>
-        <td>{{project.Priority}}</td>
-        <td>{{project.ProjectManagerFullName}}</td>
+        <td>{{project.projectName}}</td>
+        <td>{{project.startDate  | date:"MM/dd/yyyy"}}</td>
+        <td>{{project.endDate  | date:"MM/dd/yyyy"}}</td>
+        <td>{{project.priority}}</td>
+        <td>{{project.user['firstName']+' '+project.user['lastName']}}</td>
         <td class="center">
           <button class="btn btn-primary" (click)="close(project)">Select</button>
         </td>

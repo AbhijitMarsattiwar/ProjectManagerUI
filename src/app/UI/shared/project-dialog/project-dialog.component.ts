@@ -14,7 +14,7 @@ export class ProjectDialogComponent implements OnInit {
   srchTerm: string = undefined;
   p: number = 1;
   
-  searchProps: string[] = ['ProjectName','StartDate', 'EndDate', 'Priority','ProjectManagerFullName'];
+  searchProps: string[] = ['projectName','startDate', 'endDate', 'priority','firstName'];
   
   constructor(private dialogRef: MatDialogRef<ProjectDialogComponent>
     , private projectService: ProjectService

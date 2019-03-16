@@ -11,9 +11,9 @@ import { catchError } from 'rxjs/operators';
 export class UserService {
 
   getAllUsersUrl: string = `${environment.apiBaseUrl}/users`;
-  addUserUrl: string = `${environment.apiBaseUrl}/user/create`;
-  updateUserUrl: string = `${environment.apiBaseUrl}/user/update`;
-  deleteUserUrl: string = `${environment.apiBaseUrl}/user/delete`;
+  addUserUrl: string = `${environment.apiBaseUrl}/addUser`;
+  updateUserUrl: string = `${environment.apiBaseUrl}/updateUser`;
+  deleteUserUrl: string = `${environment.apiBaseUrl}/deleteUser`;
 
   constructor(private http: HttpClient) { }
 
@@ -38,6 +38,7 @@ export class UserService {
   }
 
   updateUser(user: User): Observable<User> {
+    console.log(JSON.stringify(user));
     return this.http.put<User>(this.updateUserUrl, user)
       .pipe(
         catchError(error => {
@@ -48,7 +49,7 @@ export class UserService {
   }
 
   deleteUser(id: number): Observable<User> {
-    let url = `${this.deleteUserUrl}/?userId=${id}`;
+    let url = `${this.deleteUserUrl}/${id}`;
     return this.http.delete<User>(url)
       .pipe(
         catchError(error => {
